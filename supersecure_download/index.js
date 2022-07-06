@@ -15,19 +15,23 @@ module.exports = async function (context, req) {
 
     // get file name, assume fileName has file extension
     const fileName = req.query.file;
-    let download = "https://melodybitstorageaccount.blob.core.windows.net/images/" + fileName;
+    let accountName = "melodybitstorageaccount";
+    let blobStorageName = "images"
+    let download = `https://${accountName}.blob.core.windows.net/${images}/${fileName}`;
 
     // check password
     if (password == myPassword) {
         context.log("Password correct");
 
-        try {
-            // check if file exists
-            
-            // return link to download file, if file exists
 
-        } catch(err) {
+        // check if file exists
+        let resp = await fetch(download, {
+            method: 'GET',
+        })
+        let data = await resp;
 
+        if (data.statusText == "The specified blob does not exist.") {
+            responseMessage = "File does not exist."
         }
 
     } else {
@@ -37,6 +41,9 @@ module.exports = async function (context, req) {
 
     context.res = {
         // status: 200, /* Defaults to 200 */
-        body: responseMessage
+        body: {
+            "downloadUri": download,
+            "success": responseMessage
+        }
     };
 }
