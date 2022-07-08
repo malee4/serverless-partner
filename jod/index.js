@@ -15,8 +15,7 @@ async function returnJokes(event) {
   });
   const jsonData = await resp.json();
   const joke = jsonData.contents.jokes[0].joke.text;
-  const title = jsonData.contents.jokes[0].title;
-  jokeTitle.textContent = title;
+  jokeTitle.textContent = jsonData.contents.jokes[0].joke.title;
   output.textContent = joke;
 }
 
